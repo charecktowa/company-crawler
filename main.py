@@ -1,13 +1,16 @@
 import argparse
+
 from db import create_db_and_table, fill_database
 
 
 def app(xls_file: str) -> None:
-    # Connect to database
+    # Database part
     create_db_and_table()
 
     # If database is empty, fill with the data from the .xls file
     fill_database(xls_file)
+
+    # Web scrapping part
 
 
 if __name__ == "__main__":
