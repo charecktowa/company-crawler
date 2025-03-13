@@ -1,5 +1,7 @@
 import sqlite3
 
+from utils import read_xlsx
+
 
 def connect_to_db(name: str = "./data/database.db") -> sqlite3.Connection:
     try:
@@ -15,13 +17,13 @@ def create_db_and_table(name: str = "./data/database.db") -> None:
             cursor = conn.cursor()
             cursor.execute(
                 """
-                CREATE TABLE IF NOT EXISTS companies (
+                CREATE TABLE IF NOT EXISTS companies(
                     ric TEXT PRIMARY KEY NOT NULL UNIQUE,
                     company_name TEXT NOT NULL,
-                    gics_industry_name TEXT NOT NULL,
+                    industry_type TEXT NOT NULL,
                     web_link TEXT,
-                    status TEXT DEFAULT 'Not Scraped'
-                );      
+                    status TEXT DEFAULT "Not Scraped"
+                );
                 """
             )
 
@@ -31,6 +33,19 @@ def create_db_and_table(name: str = "./data/database.db") -> None:
     finally:
         if conn:
             conn.close()
+
+
+def insert_data(data: list, conn: sqlite3.Connection) -> None:
+    # Extract all elements from data to later be saved into the database
+    try:
+        cursor = conn.cursor()
+        cursor.executemany(
+            "INSERT INTO companies(ric, company_name, industry_type, web_link) VALUES (?, ?, ?, ?)",
+            data,
+        )
+        conn.commit()
+    except sqlite3.Error as e:
+        print(e)
 
 
 def fill_database(file: str) -> None:
@@ -47,5 +62,10 @@ def fill_database(file: str) -> None:
     if count == 0:
         print("Filling the database with data from the .xls file...")
 
-        # Read the data from the .xls file
-        data = read_data()
+        data = read_xlsx(file)
+
+        insert_data(data, conn)
+
+    # Close the connection
+    if conn:
+        conn.close()
