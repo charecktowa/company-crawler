@@ -1,0 +1,15 @@
+matplotlib
+
+numpy
+
+nltk
+
+spacy
+
+requests
+
+beautifulsoup4
+
+pandas
+
+openpyxl
