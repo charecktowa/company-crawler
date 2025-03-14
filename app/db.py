@@ -2,7 +2,6 @@ import sqlite3
 
 from utils import read_xlsx
 
-
 DATABASE_PATH = "./data/database.db"
 
 
