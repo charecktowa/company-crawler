@@ -3,7 +3,10 @@ import sqlite3
 from utils import read_xlsx
 
 
-def connect_to_db(name: str = "./data/database.db") -> sqlite3.Connection:
+DATABASE_PATH = "./data/database.db"
+
+
+def connect_to_db(name: str = DATABASE_PATH) -> sqlite3.Connection:
     try:
         conn = sqlite3.connect(name)
         return conn
@@ -11,7 +14,7 @@ def connect_to_db(name: str = "./data/database.db") -> sqlite3.Connection:
         print(e)
 
 
-def create_db_and_table(name: str = "./data/database.db") -> None:
+def create_db_and_table(name: str = DATABASE_PATH) -> None:
     try:
         with sqlite3.connect(name) as conn:
             cursor = conn.cursor()
@@ -28,6 +31,20 @@ def create_db_and_table(name: str = "./data/database.db") -> None:
             )
 
             conn.commit()
+    except sqlite3.Error as e:
+        print(e)
+    finally:
+        if conn:
+            conn.close()
+
+
+def get_data_from_db(name: str = DATABASE_PATH) -> list:
+    try:
+        conn = connect_to_db(name)
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM companies")
+        data = cursor.fetchall()
+        return data
     except sqlite3.Error as e:
         print(e)
     finally:
