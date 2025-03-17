@@ -1,6 +1,7 @@
 import argparse
 
 from db import create_db_and_table, fill_database
+from scraper import get_data
 
 
 def app(xls_file: str) -> None:
@@ -11,6 +12,7 @@ def app(xls_file: str) -> None:
     fill_database(xls_file)
 
     # Web scrapping part
+    get_data()
 
 
 if __name__ == "__main__":
