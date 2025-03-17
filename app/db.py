@@ -51,6 +51,48 @@ def get_data_from_db(name: str = DATABASE_PATH) -> list:
             conn.close()
 
 
+def get_link_from_db(name: str = DATABASE_PATH) -> list:
+    try:
+        conn = connect_to_db(name)
+        cursor = conn.cursor()
+        cursor.execute("SELECT web_link FROM companies")
+        data = cursor.fetchall()
+        return data
+    except sqlite3.Error as e:
+        print(e)
+    finally:
+        if conn:
+            conn.close()
+
+
+def count_data_from_db(name: str = DATABASE_PATH) -> int:
+    try:
+        conn = connect_to_db(name)
+        cursor = conn.cursor()
+        cursor.execute("SELECT COUNT(*) FROM companies")
+        count = cursor.fetchone()[0]
+        return count
+    except sqlite3.Error as e:
+        print(e)
+    finally:
+        if conn:
+            conn.close()
+
+
+def get_data_limit_offset(limit: int, offset: int, name: str = DATABASE_PATH) -> list:
+    try:
+        conn = connect_to_db(name)
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT * FROM companies LIMIT {limit} OFFSET {offset}")
+        data = cursor.fetchall()
+        return data
+    except sqlite3.Error as e:
+        print(e)
+    finally:
+        if conn:
+            conn.close()
+
+
 def insert_data(data: list, conn: sqlite3.Connection) -> None:
     # Extract all elements from data to later be saved into the database
     try:
