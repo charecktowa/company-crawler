@@ -1,7 +1,7 @@
 import argparse
 
 from db import create_db_and_table, fill_database
-from scraper import get_data
+from scraper import scrape_sites
 
 
 def app(xls_file: str) -> None:
@@ -11,8 +11,8 @@ def app(xls_file: str) -> None:
     # If database is empty, fill with the data from the .xls file
     fill_database(xls_file)
 
-    # Web scrapping part
-    get_data()
+    # Scraper part
+    scrape_sites()
 
 
 if __name__ == "__main__":
